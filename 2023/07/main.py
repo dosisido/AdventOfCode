@@ -138,6 +138,29 @@ def riso(l:list, f, CHAR, prnt):
 
     print(val)
 
+def riso_non_ottimizzato(l:list, f, CHAR, prnt):
+    def compp(x):
+        x = x[0]
+        it_er = 10
+        val = f(x) * 10**12
+        for char in x:
+            index = CHAR.index(char)
+            val += index * 10**it_er
+            it_er-=2
+        return val
+            
+
+    l.sort(key=compp)
+
+    prod = 1
+    val = 0
+    for el in l:
+        val += prod * int(el[1])
+        prod+=1
+
+    print(val)
+
+
 def main():
     l = read_file()
     # print(l)
@@ -146,7 +169,11 @@ def main():
     #     print(i[0], TYPES[poker(i[0])])
 
     # riso(l, poker, CHAR_chall1, false)
-    riso(l, lambda x: max(poker(x), poker_jolly(x)), CHAR_chall2, False)
+    # riso(l, lambda x: max(poker(x), poker_jolly(x)), CHAR_chall2, False)
+
+    # l = read_file()
+    riso_non_ottimizzato(l, lambda x: max(poker(x), poker_jolly(x)), CHAR_chall2, False)
+
 
 if __name__ == "__main__":
     main()
