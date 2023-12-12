@@ -96,24 +96,43 @@ def count_valid_cached(springs: str, groups: Tuple[int]):
         return count_valid_cached("#" + springs[1:], groups) + count_valid_cached("." + springs[1:], groups)
 
 # to_do
-def rico_pure_function(sublist: str, groups: Tuple[int]):
+""" 
+last_ : se all'iterazione prima ho cancellaot un gruppo
+work_ : se all'iterazione prim stavo lavorando su un gruppo
+ """
+@cache
+def rico_pure_function_MIA_IMPLEMENTAZIONE(sublist: str, groups: Tuple[int], last_: bool = False, work_: bool = False):
+    
     if len(sublist) == 0:
-        if len(groups) == 0 : return 1
-        return 0
-    if len(groups) == 0: return 0
+        r = 1 if len(groups) == 0 else 0
+        return r
 
     char = sublist[0]
     sublist = sublist[1:]
 
     if char == '#':
+        if len(groups) == 0: return 0
+        if last_: return 0 # la volta prima ho tolto un #, non posso torglierne un'altro
         if groups[0] > 0:
+            work_ = True
+            groups = list(groups)
             groups[0]-= 1
-            return rico_pure_function(sublist, groups)
+            groups = tuple(groups)
+            if groups[0] == 0: 
+                last_ = True
+                groups = groups[1:]
+
+            return rico_pure_function_MIA_IMPLEMENTAZIONE(sublist, groups, last_, work_)
 
         else: return 0
     elif char == '.':
-        if groups[0]: pass
-
+        if not last_ and work_: return 0
+        return rico_pure_function_MIA_IMPLEMENTAZIONE(sublist, groups)
+    
+    elif char == '?':
+        r = rico_pure_function_MIA_IMPLEMENTAZIONE('#' +sublist, groups, last_, work_)
+        r+= rico_pure_function_MIA_IMPLEMENTAZIONE('.' +sublist, groups, last_, work_)
+        return r
 
 def primo():
     s = 0
@@ -150,9 +169,54 @@ def secondo():
         
     print("Total:", s)
 
+def nuova_soluzione():
+
+    e = [
+        # ("", ()),
+        # (".", (1,)),
+        # ("#", (1,)),
+        # ("?", (1,)),
+        # ("??", (1,)),
+        # ("???", (2,)),
+        # ("???", (1,1)),
+        # ("????", (1,1)),
+        ("?????.??.???", (1, 1, 1, 1)),
+
+    ]
+    for item in e:
+        char, occurrences = item
+        
+        char = [x for x in char]
+        char.append('?')
+        char = char * 5
+        char.pop()
+        occurrences = occurrences * 5
+
+        r1 = count_valid_cached("".join(char), occurrences)
+        r2 = rico_pure_function_MIA_IMPLEMENTAZIONE("".join(char), occurrences)
+        print(r1, r2)
+
+    for char, occurrences, n in read_file():
+        continue
+        char.append('?')
+        char = char * 5
+        char.pop()
+        occurrences = occurrences * 5
+
+        r1 = count_valid_cached("".join(char), occurrences)
+        r2 = rico_pure_function_MIA_IMPLEMENTAZIONE("".join(char), occurrences)
+
+        print(r1==r2, r1, r2)
+        if r1!=r2: exit()
+
+    
+
+
 def main():
     # primo()
-    secondo()
+    # secondo()
+    nuova_soluzione()
+
 
 if __name__ == "__main__":
     main()
