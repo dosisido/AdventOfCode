@@ -2,3 +2,5 @@
 */.venv/
 */__pycache__/
 *.exe
+*.lock
+target/
