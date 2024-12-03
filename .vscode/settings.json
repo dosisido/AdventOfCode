@@ -1,3 +1,8 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "rust-analyzer.linkedProjects": [
+        "2024/01/Cargo.toml",
+        "2024/02/Cargo.toml",
+        "2024/03/Cargo.toml",
+    ]
 }
